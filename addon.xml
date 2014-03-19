@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.ttm" name="Twoja Telewizja Morska" version="0.1" provider-name="Bohdan Bobrowski">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.simplejson" version="2.0.10"/>
+    <import addon="script.module.beautifulsoup" version="3.0.8"/>
+    <import addon="script.module.elementtree" version="1.2.7"/>
+    <import addon="script.module.parsedom" version="0.9.1"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>pl</language>
+    <summary lang="pl">Twoja Telewizja Morska</summary>
+    <description lang="pl">Wtyczka umożliwiająca oglądanie TTM przez XBMC. Powstała w dosłownie 3-4h więc posiada jeszcze sporo mankamentów - m.in. brak cacheowania, za każdym razem jak wybieramy jakąś kategorię skrypt crawluje po kilku-kilkunastu podstronach co trwa....</description>
+    <platform>all</platform>
+    <license>The MIT License (MIT)</license>
+    <forum></forum>
+	<website>https://github.com/bohdanbobrowski/plugin.video.ttm</website>
+    <source>https://github.com/bohdanbobrowski/plugin.video.ttm</source>
+  </extension>
+</addon>
