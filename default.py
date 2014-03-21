@@ -1,7 +1,22 @@
 # -*- coding: utf-8 -*-
-import urllib,urllib2,re,xbmcplugin,xbmcgui,json
+import hashlib
+import json
+import os
+import re
+import urllib
+import urllib2
+import xbmcaddon
+import xbmcgui
+import xbmcplugin
+
 # TTM - plugin do XBMC
 # by Bohdan Bobrowski 2014
+
+addon = xbmcaddon.Addon()
+addonID = addon.getAddonInfo('id')
+addonUserDataFolder = xbmc.translatePath("special://profile/addon_data/"+addonID)
+if not os.path.isdir(addonUserDataFolder):
+    os.mkdir(addonUserDataFolder)
 
 def ListaKategorii():
         req = urllib2.Request('http://www.telewizjattm.pl/nasze-programy.html')
@@ -12,7 +27,13 @@ def ListaKategorii():
         match=re.compile('<a href="([^"]*)" class="program [a-z\s]*" title="([^"]*)" ><img src="([^"]*)" alt="[^"]*" /></a>').findall(link)
         categories = []
         for href,title,src in match:
+            category = [title,href,src]
+            categories.append(category)
             addDir(title,href,'http://www.telewizjattm.pl/' + src,1)
+        categories_json = json.dumps(categories)
+        categories_file = open(addonUserDataFolder + "/categories.json", "w")
+        categories_file.write(categories_json)
+        categories_file.close()
 
 def ListaFilmow(url,name):
         url = 'http://www.telewizjattm.pl/' + url
@@ -27,18 +48,39 @@ def ListaFilmow(url,name):
         if miniatura and miniatura[0] and plikwideo and plikwideo[0] and tytul and tytul[0]:
             addLink(tytul[0][0] + " - " + tytul[0][1], plikwideo[0], 'http://www.telewizjattm.pl/' + miniatura[0])            
         linki = re.compile('</li>[\s]*<li><a href="([^"]*)" title').findall(link)
+        videos = {}
+        with open(addonUserDataFolder + "/videos.json", "r") as f:
+            for line in f:
+                videos.update(json.loads(line))
         for h in linki:
             url = 'http://www.telewizjattm.pl/' + h
-            req = urllib2.Request(url)
-            req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-            response = urllib2.urlopen(req)
-            link = response.read()
-            response.close()
-            miniatura = re.compile('image: "([^"]*)",').findall(link)
-            plikwideo = re.compile('file:"(http\:\/\/www\.telewizjattm\.pl\/ttm_filmy\/_new\/[^"]*[\.flv|.mp4])"').findall(link)
-            tytul = re.compile('<span class="date"[\s]*>([^<^>]*)<\/span>[\s]*<h2 class="title">([^<^>]*)<\/h2>').findall(link)
-            if miniatura and miniatura[0] and plikwideo and plikwideo[0] and tytul and tytul[0]:
-                addLink(tytul[0][0] + " - " + tytul[0][1], plikwideo[0], 'http://www.telewizjattm.pl/' + miniatura[0])            
+            m = hashlib.md5()
+            m.update(url)
+            url_hash = m.hexdigest()
+            if videos.get(url_hash) is not None:
+                if videos[url_hash]:
+                    addLink(videos[url_hash]['title'], videos[url_hash]['file'], 'http://www.telewizjattm.pl/' + videos[url_hash]['thumb']) 
+            if videos.get(url_hash) is None:
+                req = urllib2.Request(url)            
+                req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+                response = urllib2.urlopen(req)
+                link = response.read()
+                response.close()
+                miniatura = re.compile('image: "([^"]*)",').findall(link)
+                plikwideo = re.compile('file:"(http\:\/\/www\.telewizjattm\.pl\/ttm_filmy\/_new\/[^"]*[\.flv|.mp4])"').findall(link)
+                tytul = re.compile('<span class="date"[\s]*>([^<^>]*)<\/span>[\s]*<h2 class="title">([^<^>]*)<\/h2>').findall(link)
+                if miniatura and miniatura[0] and plikwideo and plikwideo[0] and tytul and tytul[0]:
+                    videos[url_hash] = {}
+                    videos[url_hash]['title'] = tytul[0][0] + " - " + tytul[0][1]
+                    videos[url_hash]['file'] = plikwideo[0]
+                    videos[url_hash]['thumb'] = miniatura[0]
+                    addLink(tytul[0][0] + " - " + tytul[0][1], plikwideo[0], 'http://www.telewizjattm.pl/' + miniatura[0]) 
+                else:
+                    videos[url_hash] = False
+        videos_json = json.dumps(videos)
+        videos_file = open(addonUserDataFolder + "/videos.json", "w")
+        videos_file.write(videos_json)
+        videos_file.close()
                 
 def get_params():
         param=[]
