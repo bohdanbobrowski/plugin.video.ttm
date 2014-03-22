@@ -49,9 +49,11 @@ def ListaFilmow(url,name):
             addLink(tytul[0][0] + " - " + tytul[0][1], plikwideo[0], 'http://www.telewizjattm.pl/' + miniatura[0])            
         linki = re.compile('</li>[\s]*<li><a href="([^"]*)" title').findall(link)
         videos = {}
-        with open(addonUserDataFolder + "/videos.json", "r") as f:
-            for line in f:
-                videos.update(json.loads(line))
+        # Sprawdzamy czy plik podręcznej pamięci już istnieje - jeżeli tak wczytujemy go, by przyspieszyć odczywalnie działanie wtyczki
+        if os.path.isfile(addonUserDataFolder + "/videos.json"):
+            with open(addonUserDataFolder + "/videos.json", "r") as f:
+                for line in f:
+                    videos.update(json.loads(line))
         for h in linki:
             url = 'http://www.telewizjattm.pl/' + h
             m = hashlib.md5()
