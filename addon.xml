@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.ttm" name="Twoja Telewizja Morska" version="0.2" provider-name="Bohdan Bobrowski">
+<addon id="plugin.video.ttm" name="Twoja Telewizja Morska" version="0.1" provider-name="Bohdan Bobrowski">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.simplejson" version="2.0.10"/>
@@ -12,12 +12,14 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <language>pl</language>
-    <summary lang="pl">Twoja Telewizja Morska</summary>
-	<description lang="pl">Wtyczka umożliwiająca oglądanie TTM przez XBMC. W tyczka ta powstała w wyniku szczerej troski o to by dotacje Ministerstwa Cyfryzacji z których finansowana jest część ramówki TTM nie poszła na marne.</description>
+    <summary lang="pl">Twoja Telewizja Morska to nowoczesna i zarazem ceniąca tradycje mieszkańców Kaszub telewizja lokalna. Program informacyjny nadaje w sieci TK Chopin od 15 lat.</summary>
+    <summary lang="en"></summary>
+    <description lang="pl">Pierwszy program informacyjny wyemitowaliśmy dokładnie 21 listopada 1998 roku. Początkowo raz w tygodniu przedstawiając informacje z Wejherowa i okolic. Z biegiem lat częstotliwość nadawania się zwiększała. Dzisiaj program informacyjny obejmujący cały region (Półwysep Helski, Małe Trójmiasto Kaszubskie, ościenne gminy) nadawany jest codziennie, a na 24 godzinną ramówkę składa się 20 programów tematycznych. Rozwój stacji przekłada się na rosnącą oglądalność.</description>
+    <description lang="en"></description>
     <platform>all</platform>
-    <license>The MIT License (MIT)</license>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
     <forum></forum>
-	<website>https://github.com/bohdanbobrowski/plugin.video.ttm</website>
-    <source>https://github.com/bohdanbobrowski/plugin.video.ttm</source>
+    <website></website>
+    <source></source>
   </extension>
 </addon>
